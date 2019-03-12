@@ -1,0 +1,22 @@
+{
+  "name": "record-vid",
+  "version": "1.0.0",
+  "description": "This app allows for recording of audio and video with HTML5 and storing of those videos via the Youtube data API.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/msolorio/record-and-store-vid.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/msolorio/record-and-store-vid/issues"
+  },
+  "homepage": "https://github.com/msolorio/record-and-store-vid#readme",
+  "dependencies": {
+    "vimeo-upload": "^0.1.6"
+  }
+}
