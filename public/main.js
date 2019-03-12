@@ -83,10 +83,7 @@ if (hasGetUserMedia()) {
         sendToVimeo.onclick = function(e) {
           var uploader = new VimeoUpload({
             file: blob,
-            token: "0000",
-            onError: function(e) {
-              console.log("e.target.response:", e.target.response);
-            }
+            token: "0000"
           });
 
           console.log("uploader:", uploader);

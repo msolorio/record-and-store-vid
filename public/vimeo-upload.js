@@ -192,7 +192,8 @@
      */
     me.prototype.upload = function() {
         var xhr = new XMLHttpRequest()
-        xhr.open(this.httpMethod, this.url, true)
+        // xhr.open(this.httpMethod, this.url, true)
+        xhr.open("POST", "https://api.vimeo.com/me/videos", true)
         xhr.setRequestHeader('Authorization', 'Bearer ' + this.token)
         xhr.setRequestHeader('Content-Type', 'application/json')
         xhr.setRequestHeader('Accept', 'application/vnd.vimeo.*+json;version=3.4')
@@ -201,7 +202,8 @@
             // get vimeo upload  url, user (for available quote), ticket id and complete url
             if (e.target.status < 400) {
                 var response = JSON.parse(e.target.responseText)
-                this.url = response.upload_link_secure
+                console.log("response from upload:", response);
+                this.upload_link = response.upload.upload_link;
                 this.user = response.user
                 this.ticket_id = response.ticket_id
                 this.complete_url = defaults.api_url + response.complete_uri
@@ -214,7 +216,7 @@
         xhr.onerror = this.onUploadError_.bind(this)
         xhr.send(JSON.stringify({
             "upload": {
-              "approach": "post",
+              "approach": "tus",
               "size": this.file.size
             },
             upgrade_to_1080: this.upgrade_to_1080
@@ -242,11 +244,16 @@
         }
 
         var xhr = new XMLHttpRequest()
-        console.log("this.url:", this.url);
-        xhr.open('PUT', this.url, true)
-        xhr.setRequestHeader('Content-Type', this.contentType)
+        console.log("this.upload_link:", this.upload_link);
+        // xhr.open('PUT', this.url, true)
+        xhr.open('PATCH', this.upload_link, true)
+        // xhr.setRequestHeader('Content-Type', this.contentType)
+        xhr.setRequestHeader('Tus-Resumable', "1.0.0");
+        xhr.setRequestHeader('Upload-Offset', "0");
+        xhr.setRequestHeader('Content-Type', "application/offset+octet-stream");
+        xhr.setRequestHeader('Accept', "application/vnd.vimeo.*+json;version=3.4");
             // xhr.setRequestHeader('Content-Length', this.file.size)
-        xhr.setRequestHeader('Content-Range', 'bytes ' + this.offset + '-' + (end - 1) + '/' + this.file.size)
+        // xhr.setRequestHeader('Content-Range', 'bytes ' + this.offset + '-' + (end - 1) + '/' + this.file.size)
 
         if (xhr.upload) {
             xhr.upload.addEventListener('progress', this.onProgress)
@@ -263,7 +270,7 @@
      */
     me.prototype.resume_ = function() {
         var xhr = new XMLHttpRequest()
-        xhr.open('PUT', this.url, true)
+        xhr.open('PATCH', this.url, true)
         xhr.setRequestHeader('Content-Range', 'bytes */' + this.file.size)
         xhr.setRequestHeader('X-Upload-Content-Type', this.file.type)
         if (xhr.upload) {
@@ -395,7 +402,8 @@
             console.log("error response:", e.target.response);
             this.onError(e.target.response)
         } else {
-            this.retryHandler.retry(this.resume_())
+          console.log("in else for onContentUploadError");
+            // this.retryHandler.retry(this.resume_())
         }
     }
 
