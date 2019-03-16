@@ -4,6 +4,7 @@
   "description": "This app allows for recording of audio and video with HTML5 and storing of those videos via the Youtube data API.",
   "main": "main.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
